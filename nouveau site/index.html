@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaJavaDesCopain</title>
+    <link rel="stylesheet" href="https://use.typekit.net/dwb1ckd.css">
+    <style>
+    /* Réinitialisation et styles de base */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        background-color: #fce5ec;
+        font-family: 'Luckiest Guy', cursive;
+        overflow-x: hidden;
+    }
+    
+    /* Slider horizontal */
+    #slider {
+        display: flex;
+        flex-direction: row;
+        width: 400%;
+        height: 100vh;
+        transition: transform 0.5s;
+        overflow: hidden;
+    }
+    
+    .page {
+        width: 100vw;
+        height: 100vh;
+        flex-shrink: 0;
+    }
+    
+    /* Header et menu */
+    header {
+        width: 100%;
+        height: 60px;
+        background-color: #f8c8d6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        border-bottom: 3px solid #2f337a;
+    }
+    
+    .logo {
+        position: absolute;
+        left: 20px;
+        top: -10px;
+        height: 80px;
+    }
+    
+    nav {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+    }
+    
+    nav ul {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    nav ul li {
+        text-align: center;
+    }
+    
+    nav ul li a {
+        text-decoration: none;
+        color: black;
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: bold;
+        padding: 10px 20px;
+        display: block;
+        position: relative;
+        z-index: 2;
+        transition: color 0.3s;
+    }
+    
+    nav ul li a:hover {
+        color: #c0babc;
+    }
+    
+    .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        position: relative;
+        justify-content: center;
+    }
+    
+    .menu-icon {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+    
+    .active-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        background-color: #ffffff;
+        transition: all 0.3s;
+    }
+    
+    ul#menu {
+        display: flex;
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    ul#menu li {
+        position: relative;
+    }
+    
+    ul#menu li:hover .active-bar {
+        width: 100%;
+    }
+    
+    /* Home layout principal */
+    #home .home-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        width: 100vw;
+        height: 100vh;
+        gap: 0;
+    }
+    
+    /* Colonne image gauche */
+    .left-image {
+        flex: 2 1 0;
+        min-width: 0;
+        max-width: 60%;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+    }
+    
+    .left-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center bottom;
+        display: block;
+    }
+    
+    /* Colonne boutons sociaux */
+    .social-column {
+        flex: 0 0 80px;
+        width: 80px;
+        background: #2f337a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        z-index: 2;
+    }
+    
+    .social-icons {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    .social-icons li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .social-icons img {
+        width: 50px;
+        height: 50px;
+        background: #fff;
+        border: 2px solid #000000;
+        border-radius: 8px;
+        box-shadow: 4px 4px 0 #000000;
+        padding: 6px;
+        transition: transform 0.2s;
+        display: block;
+    }
+    
+    .social-icons img:hover {
+        transform: translateY(-4px) scale(1.08);
+    }
+    
+    /* Colonne slider */
+    .side-content {
+        flex: 1 1 0;
+        min-width: 0;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        display: flex;
+        align-items: stretch;
+    }
+    
+    .slider {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        box-shadow: 0 4px 16px #0002;
+        display: flex;
+        align-items: stretch;
+    }
+    
+    .slider figure {
+        width: 300%;
+        height: 100%;
+        margin: 0;
+        display: flex;
+        position: relative;
+        left: 0;
+    }
+    
+    .slider img {
+        width: 33.33%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    
+    /* Flèches de navigation */
+    .arrow-btn {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        background: none;
+        border: none;
+        padding: 0;
+        z-index: 1000;
+        cursor: pointer;
+        transition: filter 0.2s;
+        /* PAS D'ANIMATION PAR DEFAUT */
+    }
+    
+    .arrow-left {
+        left: 2vw;
+        border-top: 30px solid transparent;
+        border-bottom: 30px solid transparent;
+        border-right: 40px solid #ff69b4;
+    }
+    
+    .arrow-right {
+        right: 2vw;
+        border-top: 30px solid transparent;
+        border-bottom: 30px solid transparent;
+        border-left: 40px solid #ff69b4;
+    }
+    
+    .arrow-btn:hover {
+        filter: brightness(1.3) drop-shadow(0 0 6px #fff);
+    }
+    
+    /* Autres pages */
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100vw;
+    }
+    .column {
+        flex: 1;
+        padding: 20px;
+        text-align: center;
+    }
+    
+    /* Responsive */
+    @media (max-width: 900px) {
+        #slider {
+            flex-direction: column;
+            width: 100vw;
+            height: auto;
+        }
+    
+        .page {
+            width: 100vw;
+            height: auto;
+        }
+    
+        #home .home-container {
+            flex-direction: column;
+        }
+    
+        .left-image,
+        .side-content,
+        .social-column {
+            width: 100%;
+            min-height: 200px;
+            max-width: 100%;
+            flex-basis: 100%;
+            height: auto;
+        }
+    
+        .social-column {
+            flex-direction: row;
+            width: 100%;
+            justify-content: center;
+            padding: 20px 0;
+        }
+    
+        .social-icons {
+            flex-direction: row;
+            gap: 20px;
+        }
+    
+        .slider {
+            height: 300px;
+        }
+    
+        .arrow-btn {
+            top: auto;
+            bottom: 20px;
+            transform: none;
+            border-width: 20px;
+        }
+    
+        .arrow-left {
+            left: 10px;
+        }
+    
+        .arrow-right {
+            right: 10px;
+        }
+    }
+    .side-content .slider {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        background: transparent;
+        box-shadow: 0 4px 16px #0002;
+        display: flex;
+        align-items: stretch;
+    }
+
+    .side-content .slider figure {
+        display: flex;
+        width: 300%; /* 3 images */
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation: slider-annees 18s infinite;
+        will-change: transform;
+    }
+
+    @keyframes slider-annees {
+        0%   { left: 0%; }
+        30%  { left: 0%; }
+        33%  { left: -100%; }
+        63%  { left: -100%; }
+        66%  { left: -200%; }
+        96%  { left: -200%; }
+        100% { left: 0%; }
+    }
+    nav, .menu, .menu-item, nav ul li a {
+        font-family: "brother-xs", sans-serif;
+        font-weight: 900;
+        font-style: normal;
+        color: #2f337a;
+    }
+    @keyframes blink-smooth {
+        0% { opacity: 1; }
+        50% { opacity: 0.3; }
+        100% { opacity: 1; }
+    }
+
+    .blink {
+        animation: blink-smooth 1.5s linear infinite;
+    }
+    </style>    
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <img src="images/page/home/logo_rose.png" alt="Logo" class="logo">
+        <nav>
+            <div class="active-bar" id="activeBar"></div>
+            <ul id="menu">
+                <li>
+                    <div class="menu-item">
+                        <img src="images/slide_bar_logo/flower_res.png" alt="Icône Home" class="menu-icon">
+                        <a href="#" data-pos="0">La Java</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item">
+                        <img src="images/slide_bar_logo/cloud_res.png" alt="Icône About" class="menu-icon">
+                        <a href="#" data-pos="1">Notre concept</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item">
+                        <img src="images/slide_bar_logo/happy_hand.png" alt="Icône Gallery" class="menu-icon">
+                        <a href="#" data-pos="2">La carte</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item">
+                        <img src="images/slide_bar_logo/mush_res.png" alt="Icône Contact" class="menu-icon">
+                        <a href="#" data-pos="3">Contact</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+    <button id="prevBtn" aria-label="Page précédente" class="arrow-btn arrow-left"></button>
+    <button id="nextBtn" aria-label="Page suivante" class="arrow-btn arrow-right"></button>    
+    <!-- Slider horizontal -->
+    <div id="slider">
+        <!-- HOME -->
+        <section class="page" id="home">
+            <div class="home-container">
+                <section class="left-image">
+                    <img src="images/page/home/left_image/La-Guinguette-a-Jojo-1.png" alt="Illustration Java des Copaings">
+                </section>
+                <aside class="social-column">
+                    <ul class="social-icons">
+                        <li><a href="#"><img src="images/page/home/icons8-facebook-50.png" alt="Facebook"></a></li>
+                        <li><a href="#"><img src="images/page/home/icons8-instagram-50.png" alt="Instagram"></a></li>
+                        <li><a href="#"><img src="images/page/home/icons8-youtube-50.png" alt="YouTube"></a></li>
+                        <li><a href="#"><img src="images/page/home/icons8-twitter-50.png" alt="Twitter"></a></li>
+                    </ul>
+                </aside>
+                <section class="side-content">
+                    <div class="slider">
+                        <figure>
+                            <img src="images/page/home/slider/Année 70.png" alt="Image 1">
+                            <img src="images/page/home/slider/Année 80.png" alt="Image 2">
+                            <img src="images/page/home/slider/Année 90.png" alt="Image 3">
+                        </figure>
+                    </div>
+                </section>
+            </div>  
+        </section>
+        <!-- ABOUT -->
+        <section class="page" id="about">
+            <div class="container">
+                <div class="column">
+                    <h1>About</h1>
+                    <p>
+                    La Java des Copaings : l'esprit guinguette réinventé
+                    </p>
+                </div>
+                <div class="column">
+                    <h2>Notre histoire</h2>
+                    <p>Contenu de la colonne 2</p>
+                </div>
+                <div class="column">
+                    <h2>Équipe</h2>
+                    <p>Contenu de la colonne 3</p>
+                </div>
+            </div>
+        </section>
+        <!-- GALLERY -->
+        <section class="page" id="gallery">
+            <div class="container">
+                <div class="column">
+                    <h2>Contenu 1</h2>
+                    <p>Voici le contenu de la première colonne.</p>
+                </div>
+                <div class="column">
+                    <h2>Contenu 2</h2>
+                    <p>Voici le contenu de la deuxième colonne.</p>
+                </div>
+                <div class="column">
+                    <h2>Contenu 3</h2>
+                    <p>Voici le contenu de la troisième colonne.</p>
+                </div>
+            </div>
+        </section>
+        <!-- CONTACT -->
+        <section class="page" id="contact">
+            <div class="container">
+                <div class="column">
+                    <h1>Contact</h1>
+                    <p>Get in touch with us here.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const slider = document.getElementById('slider');
+      const pages = document.querySelectorAll('.page');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      let currentPage = 0;
+
+      function updateSlider() {
+        slider.style.transform = `translateX(-${currentPage * 100}vw)`;
+        prevBtn.style.display = (currentPage === 0) ? "none" : "block";
+        nextBtn.style.display = (currentPage === pages.length - 1) ? "none" : "block";
+
+        // Synchronisation du clignotement
+        if (currentPage > 0 && currentPage < pages.length - 1) {
+          prevBtn.classList.add('blink');
+          nextBtn.classList.add('blink');
+        } else {
+          prevBtn.classList.remove('blink');
+          nextBtn.classList.remove('blink');
+        }
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (currentPage > 0) {
+          currentPage--;
+          updateSlider();
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (currentPage < pages.length - 1) {
+          currentPage++;
+          updateSlider();
+        }
+      });
+
+      // Gestion du swipe mobile
+      let touchStartX = 0;
+      slider.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+      });
+      slider.addEventListener('touchend', e => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const diffX = touchStartX - touchEndX;
+        if (Math.abs(diffX) > 50) {
+          if (diffX > 0) {
+            nextBtn.click();
+          } else {
+            prevBtn.click();
+          }
+        }
+      });
+
+      // Menu navigation
+      document.querySelectorAll('#menu a[data-pos]').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const pos = parseInt(this.getAttribute('data-pos'), 10);
+          if (!isNaN(pos)) {
+            currentPage = pos;
+            updateSlider();
+          }
+        });
+      });
+
+      updateSlider();
+    });
+    </script>    
+</body>
+</html>
